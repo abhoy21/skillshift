@@ -4,6 +4,9 @@ export default function Footer(): React.JSX.Element {
   return (
     <footer className="bg-black text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 className="text-[8rem] font-bold font-montserrat tracking-tight text-center mb-12 bg-gradient-to-r from-black/45 via-[#e4ff3f] to-black/45 bg-clip-text text-transparent">
+          ++INTERVIEWGPT++
+        </h2>
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col items-center md:items-start">
             <h3 className="text-3xl sm:text-5xl font-bold text-[#e4ff3f] mb-2">

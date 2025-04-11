@@ -8,7 +8,7 @@ import Hero from "./Hero";
 
 export default function LandingPage(): React.JSX.Element {
   return (
-    <main className="min-h-screen bg-[#f5f5f5]">
+    <main className="min-h-screen bg-background dark:pattern">
       <Header />
       <Hero />
       <Experience />

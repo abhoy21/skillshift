@@ -1,5 +1,5 @@
 import AuthForm from "@/components/auth/AuthForm";
 
 export default function SignUpPage(): React.JSX.Element {
-  return <AuthForm type="signUp" />;
+  return <AuthForm isSignin={false} />;
 }

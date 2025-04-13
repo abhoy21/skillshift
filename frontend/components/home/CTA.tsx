@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export default function CTA(): React.JSX.Element {
   return (
-    <section className="px-8 mb-20">
+    <section className="mb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="rounded-[40px] bg-foreground dark:bg-card p-12 text-center border border-border">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-background dark:text-light-100 mb-8">

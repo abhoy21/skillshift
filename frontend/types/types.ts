@@ -11,7 +11,7 @@ export const SignUpSchema = z.object({
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
   profilePicture: z
-    .instanceof(File, { message: "Profile picture is required" })
+    .instanceof(File, { message: "Please upload a valid file" })
     .refine(
       (file) => file.size <= 5 * 1024 * 1024,
       "File size must be less than 5MB"
@@ -19,9 +19,10 @@ export const SignUpSchema = z.object({
     .refine(
       (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
       "Only .jpg, .png, and .webp formats are supported"
-    ),
+    )
+    .optional(),
   resume: z
-    .instanceof(File, { message: "Resume is required" })
+    .instanceof(File, { message: "Please upload a valid file" })
     .refine(
       (file) => file.size <= 5 * 1024 * 1024,
       "File size must be less than 5MB"
@@ -29,7 +30,8 @@ export const SignUpSchema = z.object({
     .refine(
       (file) => ["application/pdf"].includes(file.type),
       "Only PDF format is supported"
-    ),
+    )
+    .optional(),
 });
 
 export const SignInSchema = z.object({
@@ -42,3 +44,11 @@ export const SignInSchema = z.object({
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
 });
+
+export type UserDetails = {
+  id: string;
+  name: string;
+  email: string;
+  profilePicture?: string;
+  resume?: string;
+};

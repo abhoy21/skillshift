@@ -1,6 +1,6 @@
 export default function Advantages(): React.JSX.Element {
   return (
-    <section className="px-8 mb-20">
+    <section className="mb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="flex-1">

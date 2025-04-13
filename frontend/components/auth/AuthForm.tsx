@@ -6,7 +6,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -26,14 +26,12 @@ type signInType = z.infer<typeof SignInSchema>;
 type signUpType = z.infer<typeof SignUpSchema>;
 
 type AuthResponse = {
-  accessToken: string;
+  token: string;
 };
 
 export default function AuthPage({ isSignin }: { isSignin: boolean }) {
   const router = useRouter();
   const showPasswordRef = useRef(false);
-  const [profilePreview, setProfilePreview] = useState<string | null>(null);
-  const [resumeName, setResumeName] = useState<string | null>(null);
 
   const form = useForm<signInType | signUpType>({
     resolver: zodResolver(isSignin ? SignInSchema : SignUpSchema),
@@ -41,8 +39,6 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
       name: "",
       email: "",
       password: "",
-      profilePicture: undefined,
-      resume: undefined,
     },
   });
 
@@ -52,36 +48,26 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
 
   const onSubmit = async (data: signInType | signUpType) => {
     try {
-      const formData = new FormData();
-
-      Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof File) {
-          formData.append(key, value);
-        } else if (value !== undefined) {
-          formData.append(key, String(value));
-        }
-      });
-
       const response = await axios.post<AuthResponse>(
         `${process.env.NEXT_PUBLIC_HTTP_URL}/api/v1/auth/${
           isSignin ? "signin" : "signup"
         }`,
-        formData,
+        data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (response.status === 200) {
         if (isSignin) {
-          localStorage.setItem("access_token", response.data.accessToken);
+          localStorage.setItem("token", response.data.token);
           toast.success("Signed in successfully");
-          router.push("/room/create");
+          router.push("/interview");
         } else {
           toast.success("Account created successfully. Please sign in.");
-          router.push("/auth/signin");
+          router.push("/signIn");
         }
       }
       form.reset();
@@ -93,23 +79,25 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
   };
 
   return (
-    <div className="w-full max-w-[20rem] mx-auto lg:max-w-none lg:min-w-[566px]">
+    <div className="w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-[48rem]">
       <div className="flex flex-col gap-6 card py-8 px-6 sm:py-10 sm:px-8 md:py-12 md:px-10 lg:py-14 lg:px-12">
         <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-2">
+          <Link href={"/"} className="flex items-center gap-2">
             <Image
               src="/logo.svg"
               alt="logo"
               height={32}
               width={38}
-              className="h-8 w-8 sm:h-8 sm:w-8 md:h-10 md:w-10"
+              className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 md:w-12"
             />
-            <h2 className="text-primary-100 font-montserrat font-extrabold text-xl sm:text-xl md:text-2xl">
-              SkillShift
+            <h2 className="text-primary-100 font-montserrat font-extrabold text-xl sm:text-3xl lg:text-5xl">
+              SkillShift AI
             </h2>
-          </div>
-          <h3 className="text-sm sm:text-base md:text-lg text-gray-600 text-center">
-            Practice job interviews with AI
+          </Link>
+
+          <h3 className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 text-center">
+            An AI-driven platform designed to help you master mock interviews
+            with smart feedback and personalized preparation.
           </h3>
         </div>
 
@@ -117,179 +105,27 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="w-full space-y-4 sm:space-y-5 md:space-y-6 mt-2 sm:mt-3 md:mt-4"
-            encType="multipart/form-data"
           >
             {!isSignin && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm sm:text-base text-gray-700">
-                        Full Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Your full name"
-                          {...field}
-                          className="focus:ring-2 focus:ring-accent h-10 sm:h-11 md:h-12 text-sm sm:text-base"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Profile Picture Field */}
-                <FormField
-                  control={form.control}
-                  name="profilePicture"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm sm:text-base text-gray-700">
-                        Profile Picture
-                      </FormLabel>
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                        <div className="relative">
-                          {profilePreview ? (
-                            <div className="h-16 w-16 sm:h-18 sm:w-18 md:h-20 md:w-20 rounded-full border-2 border-accent overflow-hidden">
-                              <Image
-                                src={profilePreview}
-                                alt="Profile preview"
-                                className="object-cover w-full h-full"
-                                width={80}
-                                height={80}
-                              />
-                            </div>
-                          ) : (
-                            <div className="h-16 w-16 sm:h-18 sm:w-18 md:h-20 md:w-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 sm:h-7 sm:w-7 text-gray-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex flex-col gap-2 flex-1 w-full">
-                          <FormControl>
-                            <Input
-                              type="file"
-                              id="profilePicture"
-                              accept="image/jpeg,image/png,image/webp"
-                              className="hidden"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  field.onChange(file);
-                                  setProfilePreview(URL.createObjectURL(file));
-                                }
-                              }}
-                              ref={field.ref}
-                            />
-                          </FormControl>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="border-accent text-accent hover:bg-accent/10 hover:text-accent py-2 h-10 sm:h-11 md:h-12 text-xs sm:text-sm"
-                            onClick={() =>
-                              document.getElementById("profilePicture")?.click()
-                            }
-                          >
-                            Choose Photo (JPEG, PNG, or WEBP)
-                          </Button>
-                        </div>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Resume Field */}
-                <FormField
-                  control={form.control}
-                  name="resume"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm sm:text-base text-gray-700">
-                        Resume (PDF)
-                      </FormLabel>
-                      <div className="flex flex-col items-center justify-center border-2 border-dashed border-accent rounded-lg px-3 py-4 sm:px-4 sm:py-5 md:px-4 md:py-6 bg-accent/5">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-accent"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                          />
-                        </svg>
-                        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 text-center">
-                          {resumeName ? (
-                            <span className="font-medium text-accent">
-                              {resumeName}
-                            </span>
-                          ) : (
-                            <>
-                              <span className="block">
-                                Drag and drop your resume here
-                              </span>
-                              <span className="block">or</span>
-                            </>
-                          )}
-                        </p>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            id="resume"
-                            accept="application/pdf"
-                            className="hidden"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                field.onChange(file);
-                                setResumeName(file.name);
-                              }
-                            }}
-                            ref={field.ref}
-                          />
-                        </FormControl>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="mt-3 sm:mt-4 border-accent text-accent hover:bg-accent/10 hover:text-accent h-10 sm:h-11 md:h-12 px-4 sm:px-5 md:px-6 text-xs sm:text-sm"
-                          onClick={() =>
-                            document.getElementById("resume")?.click()
-                          }
-                        >
-                          {resumeName ? "Change File" : "Browse Files"}
-                        </Button>
-                        {!resumeName && (
-                          <p className="mt-1 sm:mt-2 text-xs text-gray-500">
-                            PDF format only (Max 5MB)
-                          </p>
-                        )}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm sm:text-base text-gray-700">
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Your full name"
+                        {...field}
+                        className="focus:ring-2 focus:ring-accent h-10 sm:h-11 md:h-12 text-sm sm:text-base rounded-xl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
 
             <FormField
@@ -304,7 +140,7 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
                     <Input
                       placeholder="Your email address"
                       {...field}
-                      className="focus:ring-2 focus:ring-accent h-10 sm:h-11 md:h-12 text-sm sm:text-base"
+                      className="focus:ring-2 focus:ring-accent h-10 sm:h-11 md:h-12 text-sm sm:text-base rounded-xl"
                     />
                   </FormControl>
                   <FormMessage />
@@ -326,7 +162,7 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
                         placeholder="Enter your password"
                         type={showPasswordRef.current ? "text" : "password"}
                         {...field}
-                        className="focus:ring-2 focus:ring-accent h-10 sm:h-11 md:h-12 text-sm sm:text-base"
+                        className="focus:ring-2 focus:ring-accent h-10 sm:h-11 md:h-12 text-sm sm:text-base rounded-xl"
                       />
                     </FormControl>
                     <Button
@@ -375,7 +211,7 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
             />
 
             <Button
-              className="w-full bg-accent hover:bg-accent/90 text-dark-300 h-10 sm:h-11 md:h-12 text-sm sm:text-base"
+              className="w-full bg-accent hover:bg-accent/90 text-dark-300 h-10 sm:h-11 md:h-12 text-sm sm:text-base rounded-xl"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
@@ -390,10 +226,10 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
         <p className="text-center text-xs sm:text-sm text-gray-600">
           {isSignin ? "No account yet?" : "Have an account already?"}
           <Link
-            href={!isSignin ? "/signIn" : "/signUp"}
+            href={isSignin ? "/signUp" : "/signIn"}
             className="font-bold text-accent ml-1 hover:underline"
           >
-            {!isSignin ? "Sign In" : "Sign Up"}
+            {isSignin ? "Sign Up" : "Sign In"}
           </Link>
         </p>
       </div>

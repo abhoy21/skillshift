@@ -2088,7 +2088,6 @@ export namespace Prisma {
     role: string | null
     type: string | null
     level: string | null
-    questions: string | null
     userId: string | null
     finalized: boolean | null
     createdAt: Date | null
@@ -2099,7 +2098,6 @@ export namespace Prisma {
     role: string | null
     type: string | null
     level: string | null
-    questions: string | null
     userId: string | null
     finalized: boolean | null
     createdAt: Date | null
@@ -2124,7 +2122,6 @@ export namespace Prisma {
     role?: true
     type?: true
     level?: true
-    questions?: true
     userId?: true
     finalized?: true
     createdAt?: true
@@ -2135,7 +2132,6 @@ export namespace Prisma {
     role?: true
     type?: true
     level?: true
-    questions?: true
     userId?: true
     finalized?: true
     createdAt?: true
@@ -2232,7 +2228,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack: string[]
-    questions: string
+    questions: string[]
     userId: string
     finalized: boolean
     createdAt: Date
@@ -2328,7 +2324,7 @@ export namespace Prisma {
       type: string
       level: string
       techstack: string[]
-      questions: string
+      questions: string[]
       userId: string
       finalized: boolean
       createdAt: Date
@@ -2761,7 +2757,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Interviews", 'String'>
     readonly level: FieldRef<"Interviews", 'String'>
     readonly techstack: FieldRef<"Interviews", 'String[]'>
-    readonly questions: FieldRef<"Interviews", 'String'>
+    readonly questions: FieldRef<"Interviews", 'String[]'>
     readonly userId: FieldRef<"Interviews", 'String'>
     readonly finalized: FieldRef<"Interviews", 'Boolean'>
     readonly createdAt: FieldRef<"Interviews", 'DateTime'>
@@ -3370,7 +3366,7 @@ export namespace Prisma {
     type?: StringFilter<"Interviews"> | string
     level?: StringFilter<"Interviews"> | string
     techstack?: StringNullableListFilter<"Interviews">
-    questions?: StringFilter<"Interviews"> | string
+    questions?: StringNullableListFilter<"Interviews">
     userId?: StringFilter<"Interviews"> | string
     finalized?: BoolFilter<"Interviews"> | boolean
     createdAt?: DateTimeFilter<"Interviews"> | Date | string
@@ -3399,7 +3395,7 @@ export namespace Prisma {
     type?: StringFilter<"Interviews"> | string
     level?: StringFilter<"Interviews"> | string
     techstack?: StringNullableListFilter<"Interviews">
-    questions?: StringFilter<"Interviews"> | string
+    questions?: StringNullableListFilter<"Interviews">
     userId?: StringFilter<"Interviews"> | string
     finalized?: BoolFilter<"Interviews"> | boolean
     createdAt?: DateTimeFilter<"Interviews"> | Date | string
@@ -3430,7 +3426,7 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"Interviews"> | string
     level?: StringWithAggregatesFilter<"Interviews"> | string
     techstack?: StringNullableListFilter<"Interviews">
-    questions?: StringWithAggregatesFilter<"Interviews"> | string
+    questions?: StringNullableListFilter<"Interviews">
     userId?: StringWithAggregatesFilter<"Interviews"> | string
     finalized?: BoolWithAggregatesFilter<"Interviews"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Interviews"> | Date | string
@@ -3509,7 +3505,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack?: InterviewsCreatetechstackInput | string[]
-    questions: string
+    questions?: InterviewsCreatequestionsInput | string[]
     finalized?: boolean
     createdAt?: Date | string
     User: UserCreateNestedOneWithoutInterviewsInput
@@ -3521,7 +3517,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack?: InterviewsCreatetechstackInput | string[]
-    questions: string
+    questions?: InterviewsCreatequestionsInput | string[]
     userId: string
     finalized?: boolean
     createdAt?: Date | string
@@ -3533,7 +3529,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     User?: UserUpdateOneRequiredWithoutInterviewsNestedInput
@@ -3545,7 +3541,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     userId?: StringFieldUpdateOperationsInput | string
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3557,7 +3553,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack?: InterviewsCreatetechstackInput | string[]
-    questions: string
+    questions?: InterviewsCreatequestionsInput | string[]
     userId: string
     finalized?: boolean
     createdAt?: Date | string
@@ -3569,7 +3565,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3580,7 +3576,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     userId?: StringFieldUpdateOperationsInput | string
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3740,7 +3736,6 @@ export namespace Prisma {
     role?: SortOrder
     type?: SortOrder
     level?: SortOrder
-    questions?: SortOrder
     userId?: SortOrder
     finalized?: SortOrder
     createdAt?: SortOrder
@@ -3751,7 +3746,6 @@ export namespace Prisma {
     role?: SortOrder
     type?: SortOrder
     level?: SortOrder
-    questions?: SortOrder
     userId?: SortOrder
     finalized?: SortOrder
     createdAt?: SortOrder
@@ -3833,6 +3827,10 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type InterviewsCreatequestionsInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutInterviewsInput = {
     create?: XOR<UserCreateWithoutInterviewsInput, UserUncheckedCreateWithoutInterviewsInput>
     connectOrCreate?: UserCreateOrConnectWithoutInterviewsInput
@@ -3840,6 +3838,11 @@ export namespace Prisma {
   }
 
   export type InterviewsUpdatetechstackInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type InterviewsUpdatequestionsInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -3988,7 +3991,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack?: InterviewsCreatetechstackInput | string[]
-    questions: string
+    questions?: InterviewsCreatequestionsInput | string[]
     finalized?: boolean
     createdAt?: Date | string
   }
@@ -3999,7 +4002,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack?: InterviewsCreatetechstackInput | string[]
-    questions: string
+    questions?: InterviewsCreatequestionsInput | string[]
     finalized?: boolean
     createdAt?: Date | string
   }
@@ -4039,7 +4042,7 @@ export namespace Prisma {
     type?: StringFilter<"Interviews"> | string
     level?: StringFilter<"Interviews"> | string
     techstack?: StringNullableListFilter<"Interviews">
-    questions?: StringFilter<"Interviews"> | string
+    questions?: StringNullableListFilter<"Interviews">
     userId?: StringFilter<"Interviews"> | string
     finalized?: BoolFilter<"Interviews"> | boolean
     createdAt?: DateTimeFilter<"Interviews"> | Date | string
@@ -4103,7 +4106,7 @@ export namespace Prisma {
     type: string
     level: string
     techstack?: InterviewsCreatetechstackInput | string[]
-    questions: string
+    questions?: InterviewsCreatequestionsInput | string[]
     finalized?: boolean
     createdAt?: Date | string
   }
@@ -4114,7 +4117,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4125,7 +4128,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4136,7 +4139,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     level?: StringFieldUpdateOperationsInput | string
     techstack?: InterviewsUpdatetechstackInput | string[]
-    questions?: StringFieldUpdateOperationsInput | string
+    questions?: InterviewsUpdatequestionsInput | string[]
     finalized?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

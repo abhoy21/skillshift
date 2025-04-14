@@ -6,6 +6,27 @@ import run from "../gemini";
 
 const router: Router = Router();
 
+function parseGeminiResponse(response: string): string[] {
+  try {
+    const cleanedResponse = response
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+    return JSON.parse(cleanedResponse) as string[];
+  } catch (error) {
+    console.error("Failed to parse Gemini response:", error);
+    throw new Error("Invalid response format from Gemini API");
+  }
+}
+
+router.get("/checkpoint", async (req: AuthReqProps, res: Response) => {
+  try {
+    res.status(200).json({ message: "Endpoint up and running" });
+  } catch (error) {
+    res.status(500).json({ message: "Error checking checkpoint" });
+  }
+});
+
 router.post("/generate", async (req: AuthReqProps, res: Response) => {
   try {
     const userId = req.userId;
@@ -32,29 +53,35 @@ router.post("/generate", async (req: AuthReqProps, res: Response) => {
       questions,
     });
 
-    const geminiResponse = await run({ prompt });
+    const rawResponse = await run({ prompt });
+    if (!rawResponse) {
+      throw new Error("No response received from Gemini API");
+    }
+    const parsedQuestions = parseGeminiResponse(rawResponse);
 
-    // const newInterview = await prisma.interviews.create({
-    //   data: {
-    //     role,
-    //     level,
-    //     type,
-    //     techstack,
-    //     questions,
-    //     User: {
-    //       connect: {
-    //         id: userId,
-    //       },
-    //     },
-    //   },
-    // });
+    const newInterview = await prisma.interviews.create({
+      data: {
+        role,
+        level,
+        type,
+        techstack,
+        questions: parsedQuestions,
+        finalized: true,
+        User: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
 
-    console.log(geminiResponse);
-    res
-      .status(200)
-      .json({ message: "Questions generated successfully", geminiResponse });
+    res.status(200).json({
+      message: "Questions generated successfully",
+      data: newInterview,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error generating agent" });
+    console.error(error);
+    res.status(500).json({ message: "Error generating questions" });
   }
 });
 

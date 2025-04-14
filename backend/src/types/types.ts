@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { z } from "zod";
 
 export const SignUpSchema = z.object({
@@ -30,3 +31,15 @@ export const SignInSchema = z.object({
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     ),
 });
+
+export const InterviewsSchema = z.object({
+  role: z.string(),
+  level: z.string(),
+  type: z.string(),
+  techstack: z.array(z.string()),
+  questions: z.string(),
+});
+
+export interface AuthReqProps extends Request {
+  userId?: string;
+}

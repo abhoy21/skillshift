@@ -126,6 +126,18 @@ exports.Prisma.UserScalarFieldEnum = {
   resume: 'resume'
 };
 
+exports.Prisma.InterviewsScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  type: 'type',
+  level: 'level',
+  techstack: 'techstack',
+  questions: 'questions',
+  userId: 'userId',
+  finalized: 'finalized',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -143,7 +155,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Interviews: 'Interviews'
 };
 
 /**

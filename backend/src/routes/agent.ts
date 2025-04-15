@@ -1,8 +1,9 @@
 import { Response, Router } from "express";
 import { AuthReqProps, InterviewsSchema } from "../types/types";
-import { prisma } from "../prisma";
+
 import { createUserPrompt } from "../gemini/prompt";
 import run from "../gemini";
+import prisma from "../prisma";
 
 const router: Router = Router();
 

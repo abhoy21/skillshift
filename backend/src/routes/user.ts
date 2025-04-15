@@ -1,6 +1,6 @@
 import { Response, Router } from "express";
 import { AuthReqProps } from "../types/types";
-import { prisma } from "../prisma";
+import prisma from "../prisma";
 
 const router: Router = Router();
 

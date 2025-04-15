@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const types_1 = require("../types/types");
-const prisma_1 = require("../prisma");
 const prompt_1 = require("../gemini/prompt");
 const gemini_1 = __importDefault(require("../gemini"));
+const prisma_1 = __importDefault(require("../prisma"));
 const router = (0, express_1.Router)();
 function parseGeminiResponse(response) {
     try {
@@ -64,7 +64,7 @@ router.post("/generate", (req, res) => __awaiter(void 0, void 0, void 0, functio
             throw new Error("No response received from Gemini API");
         }
         const parsedQuestions = parseGeminiResponse(rawResponse);
-        const newInterview = yield prisma_1.prisma.interviews.create({
+        const newInterview = yield prisma_1.default.interviews.create({
             data: {
                 role,
                 level,

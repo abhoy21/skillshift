@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const types_1 = require("../types/types");
-const prisma_1 = require("../prisma");
 const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const prisma_1 = __importDefault(require("../prisma"));
 const router = (0, express_1.Router)();
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -26,7 +26,7 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
             return;
         }
         const { name, email, password, profilePicture, resume } = validation.data;
-        const existing_user = yield prisma_1.prisma.user.findUnique({
+        const existing_user = yield prisma_1.default.user.findUnique({
             where: {
                 email,
             },
@@ -36,7 +36,7 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
             return;
         }
         const hashed_password = yield (0, bcrypt_1.hash)(password, 10);
-        const user = yield prisma_1.prisma.user.create({
+        const user = yield prisma_1.default.user.create({
             data: {
                 email,
                 password: hashed_password,
@@ -68,7 +68,7 @@ router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function*
             return;
         }
         const { email, password } = validation.data;
-        const user = yield prisma_1.prisma.user.findUnique({
+        const user = yield prisma_1.default.user.findUnique({
             where: {
                 email,
             },

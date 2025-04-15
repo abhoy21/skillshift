@@ -1,8 +1,9 @@
 import { Request, Response, Router } from "express";
 import { SignInSchema, SignUpSchema } from "../types/types";
-import { prisma } from "../prisma";
+
 import { compare, hash } from "bcrypt";
 import jwt from "jsonwebtoken";
+import prisma from "../prisma";
 
 const router: Router = Router();
 

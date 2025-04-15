@@ -142,7 +142,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\WEB CODE\\interview_prep\\backend\\src\\generated\\prisma-client",
+      "value": "C:\\WEB CODE\\interview_prep\\backend\\src\\prisma\\generated",
       "fromEnvVar": null
     },
     "config": {
@@ -179,8 +179,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma-client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id             String       @id @default(uuid())\n  email          String       @unique\n  password       String\n  name           String\n  profilePicture String?\n  resume         String?\n  Interviews     Interviews[]\n}\n\nmodel Interviews {\n  id        String   @id @default(uuid())\n  role      String\n  type      String\n  level     String\n  techstack String[]\n  questions String[]\n  userId    String\n  finalized Boolean  @default(false)\n  createdAt DateTime @default(now())\n  User      User     @relation(fields: [userId], references: [id])\n}\n",
-  "inlineSchemaHash": "98843c4ee10e1b4837f95cb24b21691d527608a982cf5edec59e688d8ab7d6ad",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/prisma/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id             String       @id @default(uuid())\n  email          String       @unique\n  password       String\n  name           String\n  profilePicture String?\n  resume         String?\n  Interviews     Interviews[]\n}\n\nmodel Interviews {\n  id        String   @id @default(uuid())\n  role      String\n  type      String\n  level     String\n  techstack String[]\n  questions String[]\n  userId    String\n  finalized Boolean  @default(false)\n  createdAt DateTime @default(now())\n  User      User     @relation(fields: [userId], references: [id])\n}\n",
+  "inlineSchemaHash": "7e809c270e21a36d02c14134ef47cec4332898fe7cfa6d23d2cf0744141fb05d",
   "copyEngine": true
 }
 
@@ -189,8 +189,8 @@ const fs = require('fs')
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
   const alternativePaths = [
-    "src/generated/prisma-client",
-    "generated/prisma-client",
+    "src/prisma/generated",
+    "prisma/generated",
   ]
   
   const alternativePath = alternativePaths.find((altPath) => {
@@ -220,7 +220,7 @@ Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "src/generated/prisma-client/query_engine-windows.dll.node")
+path.join(process.cwd(), "src/prisma/generated/query_engine-windows.dll.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "src/generated/prisma-client/schema.prisma")
+path.join(process.cwd(), "src/prisma/generated/schema.prisma")

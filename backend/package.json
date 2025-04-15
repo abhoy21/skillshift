@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
-  "build": "npx prisma generate && tsc -b",
-  "start": "node dist/index.js",
-  "dev": "nodemon"
-},
+  "scripts": {
+    "build": "prisma generate && tsc -b",
+    "postinstall": "prisma generate",
+    "start": "node dist/index.js",
+    "dev": "nodemon"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

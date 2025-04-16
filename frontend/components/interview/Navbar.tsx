@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { UserDetails } from "@/types/types";
 import axios from "axios";
+import { getInitials } from "@/lib/utils";
 
 interface ApiResponse {
   user: UserDetails;
@@ -50,14 +51,6 @@ export default function InterviewNavbar(): React.JSX.Element {
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase();
   };
 
   return (

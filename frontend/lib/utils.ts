@@ -45,3 +45,11 @@ export const getTechLogos = async (techArray: string[]) => {
 
   return results;
 };
+
+export const getInitials = (name: string) => {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+};

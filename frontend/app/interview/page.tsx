@@ -5,7 +5,7 @@ import Redirect from "@/components/redirect";
 
 export default function InterviewPage(): React.JSX.Element {
   return (
-    <div className="pattern">
+    <div className="min-h-screen pattern">
       <Redirect />
       <InterviewNavbar />
       <InterviewCTA />

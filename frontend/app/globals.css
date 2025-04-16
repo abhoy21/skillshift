@@ -377,7 +377,7 @@
 }
 
 @utility blue-gradient-dark {
-  @apply bg-gradient-to-b from-[#171532] to-[#08090D];
+  @apply bg-gradient-to-b from-dark-300 to-[#08090D];
 }
 
 @utility blue-gradient {

@@ -66,7 +66,7 @@ export default function Header(): React.JSX.Element {
               )}
             </Button>
           </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-[11rem] font-extrabold text-foreground mb-2 md:mb-8 tracking-tight font-montserrat text-center flex-1 md:text-left">
+          <h1 className="text-3xl sm:text-5xl lg:text-[11rem] font-extrabold text-foreground dark:text-light-100 leading-tight mb-2 md:mb-8 tracking-tight font-montserrat text-center flex-1 md:text-left">
             SKILLSHIFT AI
           </h1>
         </div>
@@ -94,7 +94,7 @@ export default function Header(): React.JSX.Element {
         )}
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center justify-between text-card-foreground rounded-fubg-foreground dark:bg-card ll p-4 mb-8 border border-border">
+        <nav className="hidden md:flex items-center justify-between text-card-foreground rounded-full bg-foreground dark:bg-card ll p-4 mb-8 border border-border">
           <Button
             onClick={toggleTheme}
             variant="ghost"

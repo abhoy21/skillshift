@@ -9,6 +9,7 @@ import Image from "next/image";
 import { UserDetails } from "@/types/types";
 import axios from "axios";
 import { getInitials } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 interface ApiResponse {
   user: UserDetails;
@@ -91,11 +92,21 @@ export default function InterviewNavbar(): React.JSX.Element {
             </Button>
 
             {userDetails?.name ? (
-              <Avatar className="h-10 w-10 cursor-pointer hover:ring-2 hover:ring-accent transition-all">
-                <AvatarImage src={userDetails.profilePicture} />
-                <AvatarFallback className="bg-accent text-dark-100 font-bold font-montserrat">
-                  {getInitials(userDetails.name)}
-                </AvatarFallback>
+              <Avatar
+                asChild
+                className="h-10 w-10 cursor-pointer hover:ring-2 hover:ring-accent transition-all"
+              >
+                <Button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    redirect("/");
+                  }}
+                >
+                  <AvatarImage src={userDetails.profilePicture} />
+                  <AvatarFallback className="bg-accent text-dark-100 font-bold font-montserrat">
+                    {getInitials(userDetails.name)}
+                  </AvatarFallback>
+                </Button>
               </Avatar>
             ) : (
               <Avatar className="h-10 w-10 cursor-pointer hover:ring-2 hover:ring-accent transition-all">

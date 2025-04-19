@@ -60,7 +60,7 @@ export default function AuthPage({ isSignin }: { isSignin: boolean }) {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         if (isSignin) {
           localStorage.setItem("token", response.data.token);
           toast.success("Signed in successfully");

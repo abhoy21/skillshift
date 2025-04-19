@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function InterviewCTA(): React.JSX.Element {
   return (
@@ -23,12 +24,14 @@ export default function InterviewCTA(): React.JSX.Element {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-              <Button className="p-8 rounded-full bg-accent text-dark-100 font-bold  transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-accent/75 cursor-pointer text-lg flex items-center justify-center gap-2">
-                <span>Start Free Mock Interview</span>
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </Button>
+              <Link href="/interview/create">
+                <Button className="p-8 rounded-full bg-accent text-dark-100 font-bold  transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-accent/75 cursor-pointer text-lg flex items-center justify-center gap-2">
+                  <span>Start Free Mock Interview</span>
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </Button>
+              </Link>
             </div>
           </div>
 

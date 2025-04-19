@@ -7,7 +7,7 @@ export default function CreateInterviewPage(): React.JSX.Element {
       <InterviewNavbar />
       <h1>Create Interview</h1>
 
-      <Agent />
+      <Agent type="generate" />
     </div>
   );
 }

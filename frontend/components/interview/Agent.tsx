@@ -4,7 +4,11 @@ import axios from "axios";
 import { UserDetails } from "@/types/types";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { getInitials } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
+import { vapi } from "@/lib/vapi.sdk";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { interviewer } from "@/constants";
 
 interface ApiResponse {
   user: UserDetails;
@@ -17,8 +21,26 @@ enum CallStatus {
   FINISHED = "FINISHED",
 }
 
-export default function Agent(): React.JSX.Element {
-  const isSpeaking = true;
+interface SavedMessage {
+  role: "user" | "system" | "assistant";
+  content: string;
+}
+
+export default function Agent({
+  type,
+  questions,
+  interviewId,
+}: {
+  type?: string;
+  questions?: string[];
+  interviewId?: string;
+}) {
+  const router = useRouter();
+  const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
+  const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [lastMessage, setLastMessage] = useState<string>("");
+
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -47,6 +69,120 @@ export default function Agent(): React.JSX.Element {
 
     fetchUserDetails();
   }, []);
+
+  useEffect(() => {
+    const onCallStart = () => {
+      setCallStatus(CallStatus.ACTIVE);
+    };
+
+    const onCallEnd = () => {
+      setCallStatus(CallStatus.FINISHED);
+    };
+
+    const onMessage = (message: Message) => {
+      if (message.type === "transcript" && message.transcriptType === "final") {
+        const newMessage = { role: message.role, content: message.transcript };
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    };
+
+    const onSpeechStart = () => {
+      console.log("speech start");
+      setIsSpeaking(true);
+    };
+
+    const onSpeechEnd = () => {
+      console.log("speech end");
+      setIsSpeaking(false);
+    };
+
+    const onError = (error: Error) => {
+      console.log("Error:", error);
+    };
+
+    vapi.on("call-start", onCallStart);
+    vapi.on("call-end", onCallEnd);
+    vapi.on("message", onMessage);
+    vapi.on("speech-start", onSpeechStart);
+    vapi.on("speech-end", onSpeechEnd);
+    vapi.on("error", onError);
+
+    return () => {
+      vapi.off("call-start", onCallStart);
+      vapi.off("call-end", onCallEnd);
+      vapi.off("message", onMessage);
+      vapi.off("speech-start", onSpeechStart);
+      vapi.off("speech-end", onSpeechEnd);
+      vapi.off("error", onError);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      setLastMessage(messages[messages.length - 1].content);
+    }
+    const token = localStorage.getItem("token");
+    const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+      const response = await axios.post<{
+        interviews: FeedbackResponsetype;
+      }>(
+        `${process.env.NEXT_PUBLIC_HTTP_URL}/api/v1/interview/create-feedback`,
+        {
+          interviewId: interviewId,
+          transcript: messages,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        router.push(`/interview/${interviewId}/feedback`);
+      }
+    };
+
+    if (callStatus === CallStatus.FINISHED) {
+      if (type === "generate") {
+        router.push("/");
+      } else {
+        handleGenerateFeedback(messages);
+      }
+    }
+  }, [messages, callStatus, router, interviewId, type]);
+
+  const handleCall = async () => {
+    setCallStatus(CallStatus.CONNECTING);
+    if (type === "generate") {
+      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+        variableValues: {
+          username: userDetails?.name,
+          userid: userDetails?.id,
+        },
+      });
+    } else {
+      let formattedQuestions = "";
+      if (questions) {
+        formattedQuestions = questions
+          .map((question) => `- ${question}`)
+          .join("\n");
+      }
+
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formattedQuestions,
+        },
+      });
+    }
+  };
+
+  const handleDisconnect = () => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
+  };
+
   return (
     <>
       <div className="call-view">
@@ -75,6 +211,44 @@ export default function Agent(): React.JSX.Element {
             <h3>{userDetails?.name}</h3>
           </div>
         </div>
+      </div>
+
+      {messages.length > 0 && (
+        <div className="transcript-border">
+          <div className="transcript">
+            <p
+              key={lastMessage}
+              className={cn(
+                "transition-opacity duration-500 opacity-0",
+                "animate-fadeIn opacity-100"
+              )}
+            >
+              {lastMessage}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="w-full flex justify-center">
+        {callStatus !== "ACTIVE" ? (
+          <Button className="relative btn-call" onClick={() => handleCall()}>
+            <span
+              className={cn(
+                "absolute animate-ping rounded-full opacity-75",
+                callStatus !== "CONNECTING" && "hidden"
+              )}
+            />
+            <span className="relative">
+              {callStatus === "INACTIVE" || callStatus === "FINISHED"
+                ? "Call"
+                : ". . ."}
+            </span>
+          </Button>
+        ) : (
+          <Button className="btn-disconnect" onClick={() => handleDisconnect()}>
+            End
+          </Button>
+        )}
       </div>
     </>
   );

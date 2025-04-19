@@ -13,7 +13,6 @@ export default function InterviewCard({
   createdAt,
 }: InterviewCardProps): React.JSX.Element {
   const feedback = null as Feedback | null;
-
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()
@@ -24,6 +23,8 @@ export default function InterviewCard({
       Mixed: "bg-light-600",
       Technical: "bg-light-800",
     }[normalizedType] || "bg-light-600";
+
+  console.log("Interview Card Id: --->", interviewId);
   return (
     <div className="card-border w-[360px] max-sm:w-full min-h-96">
       <div className="card-interview">

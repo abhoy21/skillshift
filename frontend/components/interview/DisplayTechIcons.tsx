@@ -1,11 +1,20 @@
 import { cn, getTechLogos } from "@/lib/utils";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export default async function DisplayTechIcons({
-  techStack,
-}: TechIconProps): Promise<React.JSX.Element> {
-  const techIcons = await getTechLogos(techStack);
+export default function DisplayTechIcons({ techStack }: TechIconProps) {
+  const [techIcons, setTechIcons] = useState<{ tech: string; url: string }[]>(
+    []
+  );
+
+  useEffect(() => {
+    const loadTechIcons = async () => {
+      const icons = await getTechLogos(techStack);
+      setTechIcons(icons);
+    };
+    loadTechIcons();
+  }, [techStack]);
+
   return (
     <div className="flex flex-row">
       {techIcons.slice(0, 3).map(({ tech, url }, index) => (

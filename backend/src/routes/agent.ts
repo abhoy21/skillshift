@@ -2,7 +2,7 @@ import { Response, Router } from "express";
 import { AuthReqProps, InterviewsSchema } from "../types/types";
 
 import { createUserPrompt } from "../gemini/prompt";
-import run from "../gemini";
+import { run } from "../gemini";
 import prisma from "../prisma";
 
 const router: Router = Router();
@@ -68,7 +68,7 @@ router.post("/generate", async (req: AuthReqProps, res: Response) => {
         techstack,
         questions: parsedQuestions,
         finalized: true,
-        User: {
+        creator: {
           connect: {
             id: userId,
           },

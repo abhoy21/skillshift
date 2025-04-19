@@ -1,12 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/prisma/generated"
 }
 
 datasource db {
@@ -15,24 +11,52 @@ datasource db {
 }
 
 model User {
-  id             String       @id @default(uuid())
-  email          String       @unique
-  password       String
-  name           String
-  profilePicture String?
-  resume         String?
-  Interviews     Interviews[]
+  id                String       @id @default(uuid())
+  email             String       @unique
+  password          String
+  name              String
+  profilePicture    String?
+  resume            String?
+  createdInterviews Interviews[] @relation("CreatedInterviews")
+  givenFeedbacks    Feedback[]   @relation("GivenFeedbacks")
 }
 
 model Interviews {
-  id        String   @id @default(uuid())
-  role      String
-  type      String
-  level     String
-  techstack String[]
-  questions String[]
-  userId    String
-  finalized Boolean  @default(false)
-  createdAt DateTime @default(now())
-  User      User     @relation(fields: [userId], references: [id])
+  id                      String                   @id @default(uuid())
+  role                    String
+  type                    String
+  level                   String
+  techstack               String[]
+  questions               String[]
+  creatorId               String
+  creator                 User                     @relation("CreatedInterviews", fields: [creatorId], references: [id])
+  finalized               Boolean                  @default(false)
+  createdAt               DateTime                 @default(now())
+  feedbacks               Feedback[]               @relation("InterviewFeedbacks")
+  interviewCategoryScores InterviewCategoryScore[]
+}
+
+model Feedback {
+  id                  String                   @id @default(uuid())
+  totalScore          Int
+  categoryScores      InterviewCategoryScore[]
+  strengths           String[]
+  areasForImprovement String[]
+  finalAssessment     String
+  interviewId         String
+  interview           Interviews               @relation("InterviewFeedbacks", fields: [interviewId], references: [id])
+  intervieweeId       String
+  interviewee         User                     @relation("GivenFeedbacks", fields: [intervieweeId], references: [id])
+  createdAt           DateTime                 @default(now())
+}
+
+model InterviewCategoryScore {
+  id           String      @id @default(uuid())
+  name         String
+  score        Int
+  comment      String
+  feedbackId   String
+  feedback     Feedback    @relation(fields: [feedbackId], references: [id])
+  Interviews   Interviews? @relation(fields: [interviewsId], references: [id])
+  interviewsId String?
 }

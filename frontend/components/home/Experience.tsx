@@ -11,7 +11,7 @@ import React from "react";
 export default function Experience(): React.JSX.Element {
   return (
     <section className="px-4 sm:px-8 mb-12 md:mb-20">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8 md:gap-12">
           {/* Heading - responsive sizing */}
           <div className="flex-1">

@@ -90,7 +90,7 @@ router.post("/signin", async (req: Request, res: Response) => {
     const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
 
     res
-      .status(200)
+      .status(201)
       .json({ message: "User signed in successfully", token: jwtToken });
   } catch (error) {
     res
